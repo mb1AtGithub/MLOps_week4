@@ -28,20 +28,23 @@ def train_model(data):
     mod_dt = DecisionTreeClassifier(max_depth=3, random_state=1)
     mod_dt.fit(X_train, y_train)
     prediction = mod_dt.predict(X_test)
-    print(
-        "The accuracy of the Decision Tree is",
-        "{:.3f}".format(metrics.accuracy_score(prediction, y_test)),
-    )
+    accuracyOfModel = metrics.accuracy_score(prediction, y_test)
+    print( "The accuracy of the Decision Tree is", "{:.3f}".format(accuracyOfModel),)
     timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
 
-    return mod_dt, timestamp
-
+    return mod_dt, timestamp, accuracyOfModel
 
 def train_top_model():
     # Load Iris dataset
     data1 = pd.read_csv("mydata/v2/v2/data.csv")
-    v1_r1_model, v1_r1_t = train_model(data1)
+    v1_r1_model, v1_r1_t , accuracyOfModel= train_model(data1)
     joblib.dump(v1_r1_model, "model.joblib")
+    print(" model saved")
+    # Save metrics.csv
+    metrics_df = pd.DataFrame({"accuracy": [accuracyOfModel]})
+    metrics_df.to_csv("metrics.csv", index=False)
+    print(" metrics saved")
+
 
 
 train_top_model()
